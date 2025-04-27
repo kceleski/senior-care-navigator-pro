@@ -63,13 +63,13 @@ const clients = [
 
 export default function ClientSearch() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
   
   const filteredClients = clients.filter(client => {
     const matchesSearch = client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                           client.email.toLowerCase().includes(searchTerm.toLowerCase());
     
-    const matchesStatus = statusFilter === "" || client.status === statusFilter;
+    const matchesStatus = statusFilter === "all" || client.status === statusFilter;
     
     return matchesSearch && matchesStatus;
   });
@@ -106,7 +106,7 @@ export default function ClientSearch() {
                 </div>
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Statuses</SelectItem>
+                <SelectItem value="all">All Statuses</SelectItem>
                 <SelectItem value="assessment">Assessment</SelectItem>
                 <SelectItem value="search">Search</SelectItem>
                 <SelectItem value="tour">Tour</SelectItem>
