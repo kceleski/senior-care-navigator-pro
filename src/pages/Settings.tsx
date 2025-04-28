@@ -1,4 +1,3 @@
-
 import { PageHeader } from "@/components/PageHeader";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
+import { FavoritesTable } from "@/components/FavoritesTable";
 import {
   Select,
   SelectContent,
@@ -32,6 +32,7 @@ export default function Settings() {
           <TabsTrigger value="account">Account</TabsTrigger>
           <TabsTrigger value="notifications">Notifications</TabsTrigger>
           <TabsTrigger value="appearance">Appearance</TabsTrigger>
+          <TabsTrigger value="spreadsheet">Favorites Spreadsheet</TabsTrigger>
           <TabsTrigger value="billing">Billing</TabsTrigger>
         </TabsList>
 
@@ -166,6 +167,18 @@ export default function Settings() {
                 </div>
               </div>
               <Button onClick={handleSave}>Save Appearance Settings</Button>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="spreadsheet" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Favorites Spreadsheet</CardTitle>
+              <CardDescription>Manage your favorite facilities using this interactive spreadsheet</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <FavoritesTable />
             </CardContent>
           </Card>
         </TabsContent>
