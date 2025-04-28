@@ -9,33 +9,35 @@ export * from "./user";
 export * from "./report";
 
 // Renamed exports to avoid conflicts
-export { 
-  ConversationSchema,
-  ConversationParticipantSchema,
-  MessageSchema as ConversationMessageSchema,
-  MessageReadReceiptSchema,
-  MessageAttachmentSchema,
-  Conversation,
+export { ConversationSchema } from "./conversation";
+export type { 
   ConversationParticipant,
   Message as ConversationMessage,
   MessageReadReceipt,
-  MessageAttachment
+  MessageAttachment,
+  Conversation
+} from "./conversation";
+export { 
+  ConversationParticipantSchema,
+  MessageSchema as ConversationMessageSchema,
+  MessageReadReceiptSchema,
+  MessageAttachmentSchema
 } from "./conversation";
 
-export {
-  MessageSchema as DirectMessageSchema,
-  Message as DirectMessage
-} from "./message";
+export { MessageSchema as DirectMessageSchema } from "./message";
+export type { Message as DirectMessage } from "./message";
 
 export * from "./favorite";
 export * from "./referral";
 
 // Payment exports with renamed Invoice to avoid conflict
-export {
+export { 
   SubscriptionPlanSchema,
   UserSubscriptionSchema,
   InvoiceSchema as PaymentInvoiceSchema,
-  InvoiceItemSchema,
+  InvoiceItemSchema 
+} from "./payment";
+export type {
   SubscriptionPlan,
   UserSubscription,
   Invoice as PaymentInvoice,
