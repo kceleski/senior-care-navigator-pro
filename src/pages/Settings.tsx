@@ -1,3 +1,4 @@
+
 import { PageHeader } from "@/components/PageHeader";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
 import { FavoritesTable } from "@/components/FavoritesTable";
+import { DataSpreadsheet } from "@/components/DataSpreadsheet"; // Added this import
 import {
   Select,
   SelectContent,
