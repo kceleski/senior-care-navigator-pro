@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -8,6 +9,12 @@ import Dashboard from "./pages/Dashboard";
 import ClientSearch from "./pages/ClientSearch";
 import NotFound from "./pages/NotFound";
 import FacilitySearch from "./pages/FacilitySearch";
+import Appointments from "./pages/Appointments";
+import Inbox from "./pages/Inbox";
+import Invoices from "./pages/Invoices";
+import Bio from "./pages/Bio";
+import Reports from "./pages/Reports";
+import Settings from "./pages/Settings";
 
 const queryClient = new QueryClient();
 
@@ -31,6 +38,36 @@ const App = () => (
           <Route path="/facilities" element={
             <MainLayout>
               <FacilitySearch />
+            </MainLayout>
+          } />
+          <Route path="/appointments" element={
+            <MainLayout>
+              <Appointments />
+            </MainLayout>
+          } />
+          <Route path="/inbox" element={
+            <MainLayout>
+              <Inbox />
+            </MainLayout>
+          } />
+          <Route path="/invoices" element={
+            <MainLayout>
+              <Invoices />
+            </MainLayout>
+          } />
+          <Route path="/bio" element={
+            <MainLayout>
+              <Bio />
+            </MainLayout>
+          } />
+          <Route path="/reports" element={
+            <MainLayout>
+              <Reports />
+            </MainLayout>
+          } />
+          <Route path="/settings" element={
+            <MainLayout>
+              <Settings />
             </MainLayout>
           } />
           <Route path="*" element={<NotFound />} />
