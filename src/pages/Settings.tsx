@@ -32,7 +32,7 @@ export default function Settings() {
           <TabsTrigger value="account">Account</TabsTrigger>
           <TabsTrigger value="notifications">Notifications</TabsTrigger>
           <TabsTrigger value="appearance">Appearance</TabsTrigger>
-          <TabsTrigger value="spreadsheet">Favorites Spreadsheet</TabsTrigger>
+          <TabsTrigger value="spreadsheet">Data Spreadsheet</TabsTrigger>
           <TabsTrigger value="billing">Billing</TabsTrigger>
         </TabsList>
 
@@ -174,11 +174,11 @@ export default function Settings() {
         <TabsContent value="spreadsheet" className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>Favorites Spreadsheet</CardTitle>
-              <CardDescription>Manage your favorite facilities using this interactive spreadsheet</CardDescription>
+              <CardTitle>Data Management Spreadsheet</CardTitle>
+              <CardDescription>Manage all your data using these interactive spreadsheets</CardDescription>
             </CardHeader>
             <CardContent>
-              <FavoritesTable />
+              <DataSpreadsheet />
             </CardContent>
           </Card>
         </TabsContent>
