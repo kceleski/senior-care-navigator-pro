@@ -1,5 +1,6 @@
 
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { 
   Search, 
   Plus, 
@@ -64,6 +65,7 @@ const clients = [
 export default function ClientSearch() {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const navigate = useNavigate();
   
   const filteredClients = clients.filter(client => {
     const matchesSearch = client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -73,6 +75,10 @@ export default function ClientSearch() {
     
     return matchesSearch && matchesStatus;
   });
+
+  const handleViewClient = (clientId: string) => {
+    navigate(`/clients/${clientId}`);
+  };
 
   return (
     <div>
@@ -135,7 +141,8 @@ export default function ClientSearch() {
         {filteredClients.map((client) => (
           <div 
             key={client.id}
-            className="grid grid-cols-12 p-4 border-b hover:bg-care-blue-50 transition-colors items-center"
+            className="grid grid-cols-12 p-4 border-b hover:bg-care-blue-50 transition-colors items-center cursor-pointer"
+            onClick={() => handleViewClient(client.id)}
           >
             <div className="col-span-4">
               <div className="font-medium text-care-neutral-900">{client.name}</div>
@@ -160,7 +167,15 @@ export default function ClientSearch() {
             </div>
             
             <div className="col-span-1 text-right">
-              <Button variant="ghost" size="sm" className="text-care-blue-600">
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="text-care-blue-600"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleViewClient(client.id);
+                }}
+              >
                 <ArrowRight className="h-4 w-4" />
               </Button>
             </div>

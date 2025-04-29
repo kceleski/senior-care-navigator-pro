@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import MainLayout from "./components/MainLayout";
 import Dashboard from "./pages/Dashboard";
 import ClientSearch from "./pages/ClientSearch";
+import ClientDetail from "./pages/ClientDetail";
 import NotFound from "./pages/NotFound";
 import FacilitySearch from "./pages/FacilitySearch";
 import Appointments from "./pages/Appointments";
@@ -33,6 +34,11 @@ const App = () => (
           <Route path="/clients" element={
             <MainLayout>
               <ClientSearch />
+            </MainLayout>
+          } />
+          <Route path="/clients/:id" element={
+            <MainLayout>
+              <ClientDetail />
             </MainLayout>
           } />
           <Route path="/facilities" element={
