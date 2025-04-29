@@ -1,10 +1,11 @@
 
 import { useState, useEffect, useRef } from "react";
-import { MapPin, Info, X, Share2, Layers } from "lucide-react";
+import { MapPin, Info, X, Share2, Layers, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import mapboxgl from "mapbox-gl";
-import "mapbox-gl/dist/mapbox-gl.css";
+// Remove mapboxgl import since it's causing issues
+// import mapboxgl from "mapbox-gl";
+// import "mapbox-gl/dist/mapbox-gl.css";
 
 interface Facility {
   id: string;
@@ -33,6 +34,66 @@ const generateCoordinates = (index: number) => {
   };
 };
 
+// Mock mapboxgl class to avoid dependency on the mapbox-gl library
+// This will be used in demo mode or when the actual library isn't available
+class MockMapboxGL {
+  static Marker = class {
+    _lngLat: [number, number] = [0, 0];
+    _element: HTMLElement | null = null;
+    
+    constructor(element: HTMLElement) {
+      this._element = element;
+    }
+    
+    setLngLat(lngLat: [number, number]) {
+      this._lngLat = lngLat;
+      return this;
+    }
+    
+    addTo() {
+      return this;
+    }
+    
+    remove() {}
+  };
+  
+  static Popup = class {
+    _lngLat: [number, number] = [0, 0];
+    _content: HTMLElement | null = null;
+    _listeners: Record<string, Function[]> = { 'close': [] };
+    
+    constructor(options: Record<string, any>) {}
+    
+    setLngLat(lngLat: [number, number]) {
+      this._lngLat = lngLat;
+      return this;
+    }
+    
+    setDOMContent(content: HTMLElement) {
+      this._content = content;
+      return this;
+    }
+    
+    addTo() {
+      return this;
+    }
+    
+    on(event: string, callback: Function) {
+      if (!this._listeners[event]) {
+        this._listeners[event] = [];
+      }
+      this._listeners[event].push(callback);
+      return this;
+    }
+    
+    remove() {}
+  };
+  
+  static NavigationControl = class {
+    constructor() {}
+  };
+}
+
 export function MapView({ facilities }: MapViewProps) {
   const [selectedFacility, setSelectedFacility] = useState<string | null>(null);
   const [apiKeyInput, setApiKeyInput] = useState("");
@@ -40,10 +101,13 @@ export function MapView({ facilities }: MapViewProps) {
   const [mapLoaded, setMapLoaded] = useState(false);
   const [demoMode, setDemoMode] = useState(!apiKey);
   const mapContainer = useRef<HTMLDivElement | null>(null);
-  const map = useRef<mapboxgl.Map | null>(null);
-  const markersRef = useRef<mapboxgl.Marker[]>([]);
-  const popupsRef = useRef<mapboxgl.Popup[]>([]);
-
+  const map = useRef<any | null>(null);
+  const markersRef = useRef<any[]>([]);
+  const popupsRef = useRef<any[]>([]);
+  
+  // Store mapboxgl in a ref to avoid it being undefined in server-side rendering
+  const mapboxglRef = useRef<any | null>(null);
+  
   const handleSubmitApiKey = (e: React.FormEvent) => {
     e.preventDefault();
     if (!apiKeyInput.trim()) {
@@ -56,6 +120,9 @@ export function MapView({ facilities }: MapViewProps) {
     setDemoMode(false);
     setMapLoaded(false);
     toast.success("API key saved successfully!");
+    
+    // Reload the page to properly initialize mapbox
+    window.location.reload();
   };
 
   const handleDemoMode = () => {
@@ -73,8 +140,43 @@ export function MapView({ facilities }: MapViewProps) {
     toast.info("Mapbox API key cleared");
   };
 
+  // Effect to dynamically import mapbox-gl when needed
+  useEffect(() => {
+    async function loadMapboxGL() {
+      if (demoMode) {
+        // Use mock in demo mode
+        mapboxglRef.current = MockMapboxGL;
+        return;
+      }
+
+      try {
+        // Dynamically import mapbox-gl only when needed and not in demo mode
+        if (!mapboxglRef.current && !demoMode && apiKey) {
+          const mapboxModule = await import('mapbox-gl');
+          mapboxglRef.current = mapboxModule.default;
+          
+          // Also import CSS
+          const link = document.createElement('link');
+          link.rel = 'stylesheet';
+          link.href = 'https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css';
+          document.head.appendChild(link);
+        }
+      } catch (error) {
+        console.error("Error importing mapbox-gl:", error);
+        mapboxglRef.current = MockMapboxGL;
+        setDemoMode(true);
+        toast.error("Failed to load Mapbox. Using demo mode instead.");
+      }
+    }
+    
+    loadMapboxGL();
+  }, [demoMode, apiKey]);
+
   // Effect to initialize the map when apiKey changes
   useEffect(() => {
+    // Wait until mapboxgl is loaded
+    if (!mapboxglRef.current) return;
+    
     // Clear previous markers and popups
     markersRef.current.forEach(marker => marker.remove());
     popupsRef.current.forEach(popup => popup.remove());
@@ -98,6 +200,8 @@ export function MapView({ facilities }: MapViewProps) {
     }
 
     try {
+      const mapboxgl = mapboxglRef.current;
+      
       // Initialize Mapbox
       mapboxgl.accessToken = apiKey;
       
@@ -145,14 +249,14 @@ export function MapView({ facilities }: MapViewProps) {
           // Create marker and add to map
           const marker = new mapboxgl.Marker(el)
             .setLngLat([coords.longitude, coords.latitude])
-            .addTo(map.current!);
+            .addTo(map.current);
             
           markersRef.current.push(marker);
         });
       });
 
       // Handle errors
-      map.current.on("error", (e) => {
+      map.current.on("error", (e: Error) => {
         console.error("Mapbox error:", e);
         toast.error("Error loading map. Check your API key.");
         setMapLoaded(false);
@@ -175,7 +279,9 @@ export function MapView({ facilities }: MapViewProps) {
 
   // Effect to create popup when selected facility changes
   useEffect(() => {
-    if (!map.current || demoMode) return;
+    const mapboxgl = mapboxglRef.current;
+    
+    if (!map.current || demoMode || !mapboxgl) return;
     
     // Clear existing popups
     popupsRef.current.forEach(popup => popup.remove());
