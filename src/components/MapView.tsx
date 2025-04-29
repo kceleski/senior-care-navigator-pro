@@ -21,9 +21,9 @@ interface MapViewProps {
 
 // This is a simulation of coordinates used for demo purposes
 const generateCoordinates = (index: number) => {
-  // Create a cluster of points around Los Angeles
-  const baseLatitude = 34.0522;
-  const baseLongitude = -118.2437;
+  // Create a cluster of points around Phoenix
+  const baseLatitude = 33.448376;
+  const baseLongitude = -112.074036;
   
   return {
     latitude: baseLatitude + (Math.random() - 0.5) * 0.2,
