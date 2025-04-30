@@ -6,6 +6,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import MainLayout from "./components/MainLayout";
 import Dashboard from "./pages/Dashboard";
+import CareAssessment from "./pages/CareAssessment";
+import CareMatch from "./pages/CareMatch";
 import ClientSearch from "./pages/ClientSearch";
 import ClientDetail from "./pages/ClientDetail";
 import NotFound from "./pages/NotFound";
@@ -29,6 +31,16 @@ const App = () => (
           <Route path="/" element={
             <MainLayout>
               <Dashboard />
+            </MainLayout>
+          } />
+          <Route path="/care-assessment" element={
+            <MainLayout>
+              <CareAssessment />
+            </MainLayout>
+          } />
+          <Route path="/care-match" element={
+            <MainLayout>
+              <CareMatch />
             </MainLayout>
           } />
           <Route path="/clients" element={
