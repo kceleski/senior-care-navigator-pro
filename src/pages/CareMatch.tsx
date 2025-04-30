@@ -169,7 +169,11 @@ export default function CareMatch() {
           <h2 className="text-lg font-medium mb-4">Top Recommendations</h2>
           <div className="space-y-4">
             {matchedFacilities.map((facility) => (
-              <FacilityCard key={facility.id} facility={facility} showMatchScore={true} />
+              <FacilityCard 
+                key={facility.id} 
+                facility={facility} 
+                showMatchScore={true} 
+              />
             ))}
           </div>
         </div>

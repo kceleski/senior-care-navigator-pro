@@ -16,13 +16,15 @@ interface Facility {
   priceRange: string;
   amenities?: string[];
   images?: string[];
+  matchScore?: number;
 }
 
 interface FacilityCardProps {
   facility: Facility;
+  showMatchScore?: boolean;
 }
 
-export function FacilityCard({ facility }: FacilityCardProps) {
+export function FacilityCard({ facility, showMatchScore = false }: FacilityCardProps) {
   const handleViewDetails = () => {
     toast.info(`Viewing details for ${facility.name}`);
   };
@@ -60,6 +62,12 @@ export function FacilityCard({ facility }: FacilityCardProps) {
         <div className="absolute bottom-2 left-2 bg-care-blue-600 text-white text-xs px-2 py-1 rounded-full capitalize">
           {facility.type.replace('-', ' ')}
         </div>
+        
+        {showMatchScore && facility.matchScore && (
+          <div className="absolute bottom-2 right-2 bg-green-600 text-white text-xs px-2 py-1 rounded-full">
+            {facility.matchScore}% Match
+          </div>
+        )}
       </div>
       
       <CardHeader className="border-b p-4">
